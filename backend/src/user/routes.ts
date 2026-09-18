@@ -1,5 +1,5 @@
 import { ServerRoute } from '@hapi/hapi';
-import { registerUserHandler } from './handlers';
+import { getAllUsersHandler, getUserByIdHandler, registerUserHandler } from './handlers';
 import { createUserSchema } from './validate';
 
 export const userRoutes: ServerRoute[] = [
@@ -10,11 +10,17 @@ export const userRoutes: ServerRoute[] = [
         options: {
             validate: {
                 payload: createUserSchema,
-                failAction: async (request, h, err) => {
-                // Optional: custom error formatting for validation failures
-                throw err;
             }
-            }
-        }
+        },
     },
+    {
+        method: 'GET',
+        path: '/user',
+        handler: getAllUsersHandler,
+    },
+    {
+        method: 'GET',
+        path: '/user/{userId}',
+        handler: getUserByIdHandler,
+    }
 ];

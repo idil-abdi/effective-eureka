@@ -1,5 +1,5 @@
-export type createCategoryPayload = {
+export type CreateCategoryPayload = {
     name: string,
-    Icon: string,
+    icon: string,
     userId: string
 }
