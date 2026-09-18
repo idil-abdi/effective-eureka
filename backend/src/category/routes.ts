@@ -1,5 +1,5 @@
 import { ServerRoute } from '@hapi/hapi';
-import { createCategoryHandler, getAllCategoriesHandler, getCategoryByIdHandler } from './handlers';
+import { createCategoryHandler, getAllCategoriesHandler, getCategoryByIdHandler, updateCategoryHandler, deleteCategoryHandler } from './handlers';
 import { createCategorySchema } from './validate';
 
 export const categoryRoutes: ServerRoute[] = [
@@ -23,14 +23,14 @@ export const categoryRoutes: ServerRoute[] = [
         path: '/user/{userId}/category/{categoryId}',
         handler: getCategoryByIdHandler,
     },
-    // {
-    //     method: 'PUT',
-    //     path: '/user/{userId}/category/{categoryId}',
-    //     // handler: updateCategoryHandler,
-    // },
-    // {
-    //     method: 'DELETE',
-    //     path: '/user/{userId}/category/{categoryId}',
-    //     // handler: deleteCategoryHandler,
-    // },
+    {
+        method: 'PUT',
+        path: '/user/{userId}/category/{categoryId}',
+        handler: updateCategoryHandler,
+    },
+    {
+        method: 'DELETE',
+        path: '/user/{userId}/category/{categoryId}',
+        handler: deleteCategoryHandler,
+    },
 ];

@@ -81,6 +81,61 @@ export const createCategoryService = (prisma: PrismaClient) => ({
             success: true,
             data: category
         }
+    },
+
+    async update(userId: string, categoryId: number, data: CreateCategoryPayload ) {
+        const cleanedName = data.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        const exitingCategory = await prisma.category.findFirst({
+            where: { 
+                id: categoryId,
+                userId: userId
+
+            },
+        })
+
+        if (!exitingCategory) {
+            throw new NotFoundException(`Category with ID: ${categoryId} not found`)
+        }
+
+        const updatedCategory = await prisma.category.update({
+            where: {
+                id: categoryId,
+            },
+            data: {
+                name: cleanedName,
+                icon: data.icon,
+            }
+        })
+
+        return {
+            success: true,
+            data: updatedCategory
+        }
+    },
+
+    async delete(userId: string, categoryId: number) {
+        const exitingCategory = await prisma.category.findFirst({
+            where: { 
+                id: categoryId,
+                userId: userId
+
+            },
+        })
+
+        if (!exitingCategory) {
+            throw new NotFoundException(`Category with ID: ${categoryId} not found`)
+        }
+
+        const deletedCategory = await prisma.category.delete({
+            where: {
+                id: categoryId,
+                userId: userId
+            }
+        })
+
+        return {
+            data: deletedCategory
+        }
     }
 })
 
