@@ -1,6 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-import { PrismaClient } from '../src/generated/prisma/client';
+import { Frequency, PrismaClient } from '../src/generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`
 const pool = new Pool({connectionString})
@@ -20,15 +20,56 @@ const main = async () => {
     });
 
 
-    const CategoryOne = await prisma.category.create({
-        data: {
+    const CategoryOne = await prisma.category.upsert({
+        where: { name: "work"},
+        update: {},
+        create: {
             name: "work",
             icon: "💼",
             userId: userOne.id
         }
-    })
+    });
 
-    console.log({ userOne, CategoryOne});
+    // const taskOne = await prisma.task.create({
+    //     data: {
+    //         name: "Organise files",
+    //         description: "organise file into three main categories",
+    //         frequency: Frequency.WEEKLY,
+    //         dueDay: "MONDAY"     ,
+    //         categoryId: CategoryOne.id,
+    //     }
+    // })
+
+    // const taskTwo = await prisma.task.create({
+    //     data: {
+    //         name: "Drink Water",
+    //         description: "Stay hydrated throughout the day",
+    //         frequency: Frequency.DAILY,
+    //         dueDay: null,
+    //         categoryId: CategoryOne.id,
+    //     }
+    // })
+
+    const taskId = 5;
+    const today = new Date();
+    today.setUTCHours(0,0,0,0)
+    const taskCompletionLog = await prisma.taskCompletion.upsert({
+        where: {
+            taskId_date: {
+                taskId: taskId,
+                date: today,
+            }
+        },
+        update: {
+            completed: true,
+        },
+        create: {
+            taskId: taskId,
+            date: today,
+            completed: true
+        }
+    })
+    // console.log({ userOne, CategoryOne, taskOne, taskTwo, taskCompletionLog});
     console.log('Seeding finished successfully.');
 }
 

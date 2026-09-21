@@ -71,5 +71,5 @@ export const deleteCategoryHandler = async(
     return h.response({
         id: deleted.data.id,
         message: 'category has been successfully deleted'
-    });
+    }).code(204);
 }

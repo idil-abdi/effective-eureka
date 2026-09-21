@@ -12,6 +12,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
 model User {
   id        String   @id @default(uuid())
   username  String
@@ -32,5 +38,35 @@ model Category {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
 
+  tasks Task[]
+
   @@map("categories")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  frequency   Frequency
+  dueDay      String? // stores day name (e.g. "MONDAY") or day number as a string (e.g. "15")
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+
+  taskCompletion TaskCompletion[]
+
+  @@map("tasks")
+}
+
+model TaskCompletion {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @db.Date
+  completed Boolean  @default(false)
+
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade) //Added to the relation so that if a Task is deleted, its execution logs are automatically cleaned up.
+  taskId Int
+
+  @@unique([taskId, date])
+  @@map("task_completion")
 }
