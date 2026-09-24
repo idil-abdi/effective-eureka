@@ -4,12 +4,14 @@ import { PrismaClient } from '../generated/prisma/client';
 import { Server } from '@hapi/hapi';
 import { UserService } from '../user/service';
 import { CategoryService } from '../category/service';
+import { TaskService } from '../task/service'
 
 declare module '@hapi/hapi' {
     interface ServerApplicationState {
         prisma: PrismaClient;
         userService: UserService;
         categoryService: CategoryService;
+        taskService: TaskService
     }
 }
 

@@ -20,17 +20,17 @@ export const createUserService = (prisma: PrismaClient) => ({
         });
     },
     async getAll() {
-        return prisma.user.findMany({
-            include: {
-                categories: true,
-            }
-        });
+        return prisma.user.findMany();
     },
     async getById(userId: string) {
         const user = await prisma.user.findUnique({
             where: { id: userId },
             include: {
-                categories: true,
+                categories: {
+                    include: {
+                        tasks: true
+                    }
+                }
             }
         });     
 

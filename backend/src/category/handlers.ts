@@ -23,12 +23,11 @@ export const createCategoryHandler = async(
 }
 
 export const getAllCategoriesHandler = async(
-    request: Request<{ Params: CategoryParams }>,
+    request: Request, 
     h: ResponseToolkit
 ):Promise<ResponseObject> => {
-    const { userId } = request.params;
     const { categoryService } = request.server.app;
-    const categories = await categoryService.getAll(String(userId));
+    const categories = await categoryService.getAll();
     return h.response(categories).code(200);
 }
 
@@ -36,9 +35,9 @@ export const getCategoryByIdHandler = async(
     request: Request,
     h: ResponseToolkit
 ):Promise<ResponseObject> => {
-    const { userId, categoryId } = request.params;
+    const { categoryId } = request.params;
     const { categoryService } = request.server.app;
-    const getCategoriesById = await categoryService.getById(String(userId), Number(categoryId));
+    const getCategoriesById = await categoryService.getById(Number(categoryId));
     return h.response(getCategoriesById).code(200);
 }
 
@@ -70,6 +69,6 @@ export const deleteCategoryHandler = async(
     
     return h.response({
         id: deleted.data.id,
-        message: 'category has been successfully deleted'
-    }).code(204);
+        message: 'Category has been successfully deleted'
+    }).code(200);
 }

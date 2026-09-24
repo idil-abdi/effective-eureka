@@ -38,39 +38,22 @@ export const createCategoryService = (prisma: PrismaClient) => ({
         };
     },
 
-    async getAll(userId: string) {
-        const user = await prisma.user.findUnique({
-            where: { id: userId},
-        })
-
-        if (!user) {
-            throw new NotFoundException(`User with ID: ${userId} not found`)
-        }
-
-        const category = await prisma.category.findMany({
-            where: { userId },
-            select: {
-                id: true,
-                name: true,
-                icon: true,
-                createdAt: true,
-                userId: true
+    async getAll() {
+        return prisma.category.findMany({
+            include: {
+                tasks: true,
             }
         })
-
-        return {
-            success: true,
-            data: category
-        }
     },
 
-    async getById(userId: string, categoryId: number) {
+    async getById(categoryId: number) {
         const category = await prisma.category.findUnique({
             where: { 
                 id: categoryId,
-                userId: userId
-
             },
+            include: {
+                tasks: true,
+            }
         })
 
         if (!category) {
