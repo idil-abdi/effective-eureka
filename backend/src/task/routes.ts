@@ -1,7 +1,6 @@
 import { ServerRoute } from "@hapi/hapi";
-import { createTaskHandler, deleteTaskByIdHandler, getAllTasksHandler, getTaskByIdHandler } from "./handlers";
-import { createTaskSchema } from "./validate";
-import Joi from "joi";
+import { createTaskHandler, deleteTaskByIdHandler, updateTaskByIdHandler, getAllTasksHandler, getTaskByIdHandler } from "./handlers";
+import { createTaskSchema, updateTaskSchema } from "./validate";
 
 export const taskRoutes: ServerRoute[] = [
     {
@@ -23,6 +22,16 @@ export const taskRoutes: ServerRoute[] = [
         method: 'GET',
         path: '/user/{userId}/category/{categoryId}/task/{taskId}',
         handler: getTaskByIdHandler,
+    },
+    {
+        method: 'PUT',
+        path: '/user/{userId}/category/{categoryId}/task/{taskId}',
+        handler: updateTaskByIdHandler,
+        options: {
+            validate: {
+                payload: updateTaskSchema,
+            }
+        }
     },
     {
         method: 'DELETE',

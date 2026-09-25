@@ -4,6 +4,7 @@ import userPlugin from './plugins/user';
 import errorHandlerPlugin from './exception/errorHandlerPlugin ';
 import categoryPlugin from './plugins/category';
 import taskPlugin from './plugins/task';
+import taskCompletionPlugin from './plugins/taskCompletion';
 
 const init = async () => {
     const server = Hapi.server({
@@ -11,7 +12,7 @@ const init = async () => {
         host: 'localhost',
     });
 
-    await server.register([prismaPlugin,errorHandlerPlugin, userPlugin, categoryPlugin, taskPlugin]);
+    await server.register([prismaPlugin,errorHandlerPlugin, userPlugin, categoryPlugin, taskPlugin, taskCompletionPlugin]);
     await server.start();
 
     console.log('Server running on %s', server.info.uri);

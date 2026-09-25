@@ -6,5 +6,11 @@ export type CreateTaskPayload = {
     frequency: Frequency;
     dueDay?: string;
     categoryId: number;
-    // userId: string;
+}
+
+export type UpdateTaskPayload = {
+    name?: string;
+    description?: string;
+    frequency?: Frequency;
+    dueDay?: string;
 }

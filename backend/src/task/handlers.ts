@@ -1,9 +1,10 @@
 import { Request, ResponseObject, ResponseToolkit } from "@hapi/hapi";
-import { CreateTaskPayload } from "./types";
+import { CreateTaskPayload, UpdateTaskPayload } from "./types";
 
 type TaskParams = {
     userId: string;
     categoryId: string;
+    taskId: string;
 }
 
 export const createTaskHandler = async(
@@ -23,22 +24,41 @@ export const createTaskHandler = async(
 }
 
 export const getAllTasksHandler = async(
-    request: Request, 
+    request: Request<{ Params: TaskParams}>,
     h: ResponseToolkit
 ):Promise<ResponseObject> => {
+    const categoryId = parseInt(request.params.categoryId, 10);
     const { taskService } = request.server.app;
-    const task = await taskService.getAll();
+    const task = await taskService.getAll(categoryId);
     return h.response(task).code(200);
 }
 
 export const getTaskByIdHandler = async(
+    request: Request<{ Params: TaskParams}>, 
+    h: ResponseToolkit
+):Promise<ResponseObject> => {
+    const taskId = parseInt(request.params.taskId, 10);
+    const categoryId = parseInt(request.params.categoryId, 10);
+    const { taskService } = request.server.app;
+    const task = await taskService.getById(taskId, categoryId);
+    return h.response(task).code(200);
+}
+
+export const updateTaskByIdHandler = async(
     request: Request, 
     h: ResponseToolkit
 ):Promise<ResponseObject> => {
-    const { taskId } = request.params;
+    const { userId, taskId, categoryId } = request.params;
     const { taskService } = request.server.app;
-    const task = await taskService.getById(Number(taskId));
-    return h.response(task).code(200);
+
+    const data = request.payload as UpdateTaskPayload;
+
+    const updatedTask = await taskService.update(data, Number(taskId), Number(categoryId), String(userId));
+
+    return h.response({
+        data: updatedTask.data,
+        message: 'Task has been successfully updated'
+    }).code(200);
 }
 
 export const deleteTaskByIdHandler = async(
@@ -52,6 +72,6 @@ export const deleteTaskByIdHandler = async(
     
     return h.response({
         id: deleted.data.id,
-        message: 'task has been successfully deleted'
+        message: 'Task has been successfully deleted'
     }).code(200);
 }

@@ -26,8 +26,9 @@ export const getAllCategoriesHandler = async(
     request: Request, 
     h: ResponseToolkit
 ):Promise<ResponseObject> => {
+    const { userId } = request.params;
     const { categoryService } = request.server.app;
-    const categories = await categoryService.getAll();
+    const categories = await categoryService.getAll(String(userId));
     return h.response(categories).code(200);
 }
 
@@ -35,9 +36,9 @@ export const getCategoryByIdHandler = async(
     request: Request,
     h: ResponseToolkit
 ):Promise<ResponseObject> => {
-    const { categoryId } = request.params;
+    const { userId, categoryId } = request.params;
     const { categoryService } = request.server.app;
-    const getCategoriesById = await categoryService.getById(Number(categoryId));
+    const getCategoriesById = await categoryService.getById(String(userId), Number(categoryId));
     return h.response(getCategoriesById).code(200);
 }
 
@@ -53,8 +54,8 @@ export const updateCategoryHandler = async(
     const update = await categoryService.update(String(userId), Number(categoryId), data);
     
     return h.response({
-        id: update.data.id,
-        message: 'category has been successfully deleted'
+        data: update.data,
+        message: 'Category has been successfully updated'
     }).code(200);
 }
 

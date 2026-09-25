@@ -38,32 +38,38 @@ export const createCategoryService = (prisma: PrismaClient) => ({
         };
     },
 
-    async getAll() {
-        return prisma.category.findMany({
-            include: {
-                tasks: true,
-            }
-        })
+    async getAll(userId: string) {
+        const categories = await prisma.category.findMany({
+            where: {
+                userId: userId, 
+            },
+        });
+
+        return {
+            success: true,
+            data: categories,
+        };
     },
 
-    async getById(categoryId: number) {
+    async getById(userId: string, categoryId: number) {
         const category = await prisma.category.findUnique({
             where: { 
                 id: categoryId,
+                userId: userId,
             },
             include: {
                 tasks: true,
-            }
-        })
+            },
+        });
 
         if (!category) {
-            throw new NotFoundException(`Category with ID: ${categoryId} not found`)
+            throw new NotFoundException(`Category with ID: ${categoryId} not found`);
         }
 
         return {
             success: true,
-            data: category
-        }
+            data: category,
+        };
     },
 
     async update(userId: string, categoryId: number, data: CreateCategoryPayload ) {
