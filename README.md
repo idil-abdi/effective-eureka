@@ -14,7 +14,7 @@ A mobile application that turns personal productivity into a fun, rewarding expe
 
 ## Tech Stack
 
-* **Frontend/Mobile:** React Native, Axios, TansQuery, TanStack Query
+* **Frontend/Mobile:** React Native, Axios, TanStack Query
 * **Backend / Database:** Hapi.js, Prisma, Postgres, Joi, Typescript 
 
 ---
